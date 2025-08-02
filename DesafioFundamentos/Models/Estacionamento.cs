@@ -1,3 +1,6 @@
+using System;
+using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 namespace DesafioFundamentos.Models
 {
     public class Estacionamento
@@ -12,12 +15,39 @@ namespace DesafioFundamentos.Models
             this.precoPorHora = precoPorHora;
         }
 
+        public static bool ChecandoPlacaValida(string placa)
+        {
+            Regex regexold = new Regex("[A-Za-z]+-[0-9]+", RegexOptions.IgnoreCase);
+            Regex regexnew = new Regex("^[A-Z]{3}[0-9]{1}[A-Z]{1}[0-9]{2}$", RegexOptions.IgnoreCase);
+            // You can use regex.IsMatch(placa) here if you want to validate the plate
+            return regexold.IsMatch(placa) || regexnew.IsMatch(placa);
+        }
+
         public void AdicionarVeiculo()
         {
             // TODO: Pedir para o usuário digitar uma placa (ReadLine) e adicionar na lista "veiculos"
             // *IMPLEMENTE AQUI*
+
+            bool placaValida;
+            string car;
+
             Console.WriteLine("Digite a placa do veículo para estacionar:");
-            string car = Console.ReadLine().ToUpper();
+            do
+            {
+
+                 car = Console.ReadLine().ToUpper();
+                 placaValida = ChecandoPlacaValida(car);
+
+                if (!placaValida)
+                {
+                    Console.WriteLine("Formato de placa inválido. Por favor, tente novamente.");
+                }
+
+            } while (!placaValida);
+
+
+
+
             veiculos.Add(car);
         }
 
@@ -37,9 +67,9 @@ namespace DesafioFundamentos.Models
                 // TODO: Pedir para o usuário digitar a quantidade de horas que o veículo permaneceu estacionado,
                 // TODO: Realizar o seguinte cálculo: "precoInicial + precoPorHora * horas" para a variável valorTotal                
                 // *IMPLEMENTE AQUI*
-                
+
                 decimal horas = decimal.Parse(Console.ReadLine());
-                decimal valorTotal = precoInicial + precoPorHora*horas;
+                decimal valorTotal = precoInicial + precoPorHora * horas;
 
                 // TODO: Remover a placa digitada da lista de veículos
                 // *IMPLEMENTE AQUI*
